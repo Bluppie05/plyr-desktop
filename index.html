@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="windowtitle"></title>
+    <link rel="stylesheet" href="https://cdn.plyr.io/3.6.3/plyr.css" />
+
+    <script>
+        const querystring = require('querystring');
+        let query = querystring.parse(global.location.search);
+        let data = JSON.parse(query['?data'])
+
+        var video = data.args[0]
+        document.getElementById("windowtitle").innerHTML = `Plyr-desktop - ${video}`;
+    </script>
+
+    <style>
+        html, body {
+            margin: 0;
+            height: 100%;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+                    user-select: none;
+        }
+
+        #player {
+            height: 100vh;
+            width: 100%;
+        }
+    </style>
+
+</head>
+<body>
+    <div id="videobox">
+        <video id="player" playsinline controls data-poster="/path/to/poster.jpg"></video>
+    </div>
+    <script>
+        var extension = video.split(".")[video.split(".").length - 1]
+
+        if(video.startsWith('/')) {
+            document.getElementById("player").innerHTML = `<source src="file://${video}" type="video/${extension}" />`;
+        } else if(video.startsWith('http') && video.includes('youtu')) {
+            if(video.includes("watch?v=")) {
+                var vidid = video.split("watch?v=")[video.split("watch?v=").length - 1];
+            } else {
+                var vidid = video.split("/")[video.split("/").length - 1];
+            }
+            document.getElementById("videobox").innerHTML = `<div class="plyr__video-embed" id="player"> <iframe src="https://youtube.com/embed/${vidid}?origin=https://plyr.io&amp;iv_load_policy=3&amp;modestbranding=1&amp;playsinline=1&amp;showinfo=0&amp;rel=0&amp;enablejsapi=1" allowfullscreen allowtransparency allow="autoplay" ></iframe></div>`;
+        } else {
+            document.getElementById("player").innerHTML = `<source src="file://${data.dirname}/${video}" type="video/${extension}" />`;
+        }
+    </script>
+
+    <script src="https://cdn.plyr.io/3.6.3/plyr.js"></script>
+    <script>
+    const player = new Plyr('#player');
+    </script>
+</body>
+</html>
